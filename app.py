@@ -56,8 +56,17 @@ with gr.Blocks(theme=GRADIO_THEME) as app:
         with gr.Tab("マージ"):
             create_merge_app(model_holder=model_holder)
 
+
+## パスワードがユーザー名＋文字数の場合
+def auth(user_name: str, password: str):
+    if password == user_name + str(len(user_name)):
+        return True  # 認証成功
+    else:
+        return False  # 認証失敗
+
+
 app.launch(
-    auth=args.auth,
+    auth=auth,
     server_name=args.host,
     server_port=args.port,
     inbrowser=not args.no_autolaunch,
