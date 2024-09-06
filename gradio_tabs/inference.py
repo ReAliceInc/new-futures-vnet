@@ -237,7 +237,7 @@ def create_inference_app(model_holder: TTSModelHolder) -> gr.Blocks:
         )
 
         # ピンクノイズを追加（音量を調整）
-        combined = audio_segment.overlay(noise_segment - 20)
+        combined = audio_segment.overlay(noise_segment + 10)
 
         # numpy配列に戻す
         buffer = io.BytesIO()
