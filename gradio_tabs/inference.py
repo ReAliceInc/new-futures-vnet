@@ -1,7 +1,10 @@
 import datetime
 import json
 from typing import Optional
-
+import numpy as np
+import scipy.io.wavfile as wavfile
+from pydub import AudioSegment
+import io
 import gradio as gr
 
 from style_bert_vits2.constants import (
@@ -203,6 +206,46 @@ def gr_util(item):
 
 
 def create_inference_app(model_holder: TTSModelHolder) -> gr.Blocks:
+        def generate_pink_noise(length):
+        tmp = np.random.random(size=length) * 2 - 1
+        S = np.fft.rfft(tmp)
+        fil = 1 / (np.arange(len(S)) + 1)
+        S = S * fil
+        s = np.fft.irfft(S)
+        s /= np.max(np.abs(s))
+        return s
+
+    def add_watermark(audio, sr):
+        # ピンクノイズを生成
+        noise_length = len(audio)
+        pink_noise = generate_pink_noise(noise_length)
+        
+        # AudioSegmentオブジェクトに変換
+        audio_segment = AudioSegment(
+            audio.tobytes(),
+            frame_rate=sr,
+            sample_width=audio.dtype.itemsize,
+            channels=1
+        )
+        
+        # ピンクノイズをAudioSegmentオブジェクトに変換
+        noise_segment = AudioSegment(
+            pink_noise.astype(np.float32).tobytes(),
+            frame_rate=sr,
+            sample_width=4,
+            channels=1
+        )
+        
+        # ピンクノイズを追加（音量を調整）
+        combined = audio_segment.overlay(noise_segment - 20)
+        
+        # numpy配列に戻す
+        buffer = io.BytesIO()
+        combined.export(buffer, format="wav")
+        buffer.seek(0)
+        _, watermarked_audio = wavfile.read(buffer)
+        
+        return watermarked_audio
     def tts_fn(
         model_name,
         model_path,
@@ -283,6 +326,8 @@ def create_inference_app(model_holder: TTSModelHolder) -> gr.Blocks:
                 pitch_scale=pitch_scale,
                 intonation_scale=intonation_scale,
             )
+            # 透かしを追加
+            audio_with_watermark = add_watermark(audio, sr)
         except InvalidToneError as e:
             logger.error(f"Tone error: {e}")
             return f"Error: アクセント指定が不正です:\n{e}", None, kata_tone_json_str
@@ -303,7 +348,7 @@ def create_inference_app(model_holder: TTSModelHolder) -> gr.Blocks:
         message = f"Success, time: {duration} seconds."
         if wrong_tone_message != "":
             message = wrong_tone_message + "\n" + message
-        return message, (sr, audio), kata_tone_json_str
+        return message, (sr, audio_with_watermark), kata_tone_json_str
 
     model_names = model_holder.model_names
     if len(model_names) == 0:
