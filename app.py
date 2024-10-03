@@ -42,7 +42,7 @@ if device == "cuda" and not torch.cuda.is_available():
 path_config = get_path_config()
 model_holder = TTSModelHolder(Path(path_config.assets_root), device)
 
-with gr.Blocks(theme=GRADIO_THEME) as app:
+with gr.Blocks(theme=gr.themes.Base()) as app:
     gr.Markdown(f"# Style-Bert-VITS2 WebUI (version {VERSION})")
     with gr.Tabs():
         with gr.Tab("音声合成"):
