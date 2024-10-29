@@ -326,19 +326,19 @@ def create_inference_app(model_holder: TTSModelHolder) -> gr.Blocks:
                 with gr.Row():
                     with gr.Column(scale=3):
                         model_name = gr.Dropdown(
-                            label="1:モデル一覧",
+                            label="⭐1.モデル一覧⭐",
                             choices=model_names,
                             value=model_names[initial_id],
                             info="使用可能なモデルを選択してください。",
                             elem_classes=["red-text"],  # 追加: CSSクラスを指定
                         )
                         model_path = gr.Dropdown(
-                            label="モデルファイル",
+                            label="⭐2.モデルファイル⭐",
                             choices=initial_pth_files,
                             value=initial_pth_files[0],
                         )
-                    refresh_button = gr.Button("更新", scale=1, visible=True)
-                    load_button = gr.Button("ロード", scale=1, variant="primary")
+                    refresh_button = gr.Button("⭐3.更新⭐", scale=1, visible=True)
+                    load_button = gr.Button("⭐4.ロード⭐", scale=1, variant="primary")
                 text_input = gr.TextArea(label="テキスト", value=initial_text)
                 pitch_scale = gr.Slider(
                     minimum=0.8,
@@ -458,7 +458,7 @@ def create_inference_app(model_holder: TTSModelHolder) -> gr.Blocks:
                     label="参照音声", type="filepath", visible=False
                 )
                 tts_button = gr.Button(
-                    "音声合成（モデルをロードしてください）",
+                    "⭐5.音声合成（モデルをロードしてください）⭐",
                     variant="primary",
                     interactive=False,
                 )

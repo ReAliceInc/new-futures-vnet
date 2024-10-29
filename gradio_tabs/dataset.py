@@ -14,7 +14,7 @@ def do_slice(
     input_dir: str,
 ):
     if model_name == "":
-        return "Error: モデル名を入力してください。"
+        return "Error: を入力してください。"
     logger.info("Start slicing...")
     cmd = [
         "slice.py",
@@ -78,55 +78,102 @@ def do_transcribe(
     return "音声の文字起こしが完了しました。"
 
 
-how_to_md = """
-Style-Bert-VITS2の学習用データセットを作成するためのツールです。以下の2つからなります。
-
-- 与えられた音声からちょうどいい長さの発話区間を切り取りスライス
-- 音声に対して文字起こし
-
-このうち両方を使ってもよいし、スライスする必要がない場合は後者のみを使ってもよいです。**コーパス音源などすでに適度な長さの音声ファイルがある場合はスライスは不要**です。
-
-## 必要なもの
-
-学習したい音声が入った音声ファイルいくつか（形式はwav以外でもmp3等通常の音声ファイル形式なら可能）。
-合計時間がある程度はあったほうがいいかも、10分とかでも大丈夫だったとの報告あり。単一ファイルでも良いし複数ファイルでもよい。
-
-## スライス使い方
-1. `inputs`フォルダに音声ファイルをすべて入れる（スタイル分けをしたい場合は、サブフォルダにスタイルごとに音声を分けて入れる）
-2. `モデル名`を入力して、設定を必要なら調整して`音声のスライス`ボタンを押す
-3. 出来上がった音声ファイルたちは`Data/{モデル名}/raw`に保存される
-
-## 書き起こし使い方
-
-1. `Data/{モデル名}/raw`に音声ファイルが入っていることを確認（直下でなくてもよい）
-2. 設定を必要なら調整してボタンを押す
-3. 書き起こしファイルは`Data/{モデル名}/esd.list`に保存される
-
-## 注意
-
-- ~~長すぎる秒数（12-15秒くらいより長い？）のwavファイルは学習に用いられないようです。また短すぎてもあまりよくない可能性もあります。~~ この制限はVer 2.5では学習時に「カスタムバッチサンプラーを使わない」を選択すればなくなりました。が、長すぎる音声があるとVRAM消費量が増えたり安定しなかったりするので、適度な長さにスライスすることをおすすめします。
-- 書き起こしの結果をどれだけ修正すればいいかはデータセットに依存しそうです。
-"""
-
-
 def create_dataset_app() -> gr.Blocks:
     with gr.Blocks(theme=GRADIO_THEME) as app:
+        # Markdownの定義
+
         gr.Markdown(
             "**既に1ファイル2-12秒程度の音声ファイル集とその書き起こしデータがある場合は、このタブは使用せずに学習できます。**"
         )
+        
+        gr.Markdown(
+    """
+    <span style='color: red; font-size: 20px;'>⭐️１. データセット作成 => ⭐️２. 学習 => ⭐️３. 上級者向け: スタイル作成 => ⭐️４. 上級者向け: マージ => ⭐️５. 音声合成</span>
+
+    <p style='font-size: 20px; color: orange;'>上記に沿ってお進みください。タブを開きますと⭐️と数字に沿って進みください。</p>
+    """
+    )
+        
+
         with gr.Accordion("使い方", open=False):
-            gr.Markdown(how_to_md)
-        model_name = gr.Textbox(
-            label="モデル名を入力してください（話者名としても使われます）。"
-        )
+            gr.Markdown(
+        """
+    <p style='font-size: 20px;'>
+    画像で知りたい人はこちらから⇒⇒⇒
+    <a href="https://xd.adobe.com/view/c3b67c16-7ea2-430f-a40a-bf2276fd2f72-96e5/" target="_blank" style="font-size: 20px; color: orange; text-decoration: underline;">
+        こちらは画像でSBV2の使い方をわかりやすく説明しています。
+    </a>
+    </p>
+
+    
+        Style-Bert-VITS2の学習用データセットを作成するためのツールです。以下の2つからなります。
+
+        - 与えられた音声からちょうどいい長さの発話区間を切り取りスライス
+        - 音声に対して文字起こし
+
+    このうち両方を使ってもよいし、スライスする必要がない場合は後者のみを使ってもよいです。コーパス音源などすでに適度な長さの音声ファイルがある場合はスライスは不要です。
+
+        
+    1.データセット作成
+
+        音声を一定の長さにスライスし、学習用のデータセットを準備します。
+        「データセット作成」タブで音声データの準備。
+        まずは「データセット作成」タブで音声データを準備します。
+
+    2.学習
+
+        「学習」タブで音声モデルを作成。
+        データセットが準備できたら、次は「学習」タブで音声モデルを学習させます。
+
+    3.スタイル作成
+
+        「スタイル作成」タブで音声スタイルの調整。
+        学習が完了したら、音声スタイルを作成して調整することができます。
+
+    4.マージ
+
+        複数のスタイルを組み合わせて、新しいスタイルを作成することができます。
+        たとえば、「話し方はAさんで、声のトーンはBさん」という風に合成することも可能です。
+
+    5.音声合成
+
+        「音声合成」タブで実際に音声を生成。
+        最後に、テキストから音声を生成して確認できます。
+
+    ・SBV2でできること
+
+
+    自然な話し方の音声生成
+        テキストを入力すると、まるで人が話しているかのような音声を生成できます。
+
+
+    異なる話し方や声での合成
+        スタイルを変えることで、同じ内容でも異なる話し方や声で生成できます。
+
+
+    音声のカスタマイズ
+        スタイルベクトルやスタイルのマージを利用して、カスタマイズされた音声合成が可能です。
+
+
+
+
+        """
+    )
+        # フィールドを使用して⭐1の部分を白色、サイズを元に戻します
+        with gr.Row():
+            with gr.Column():
+                model_name = gr.Textbox(
+                    label="⭐１.モデル名を入力してください（話者名としても使われます）⭐"
+                )
+
         with gr.Accordion("音声のスライス"):
             gr.Markdown(
-                "**すでに適度な長さの音声ファイルからなるデータがある場合は、その音声をData/{モデル名}/rawに入れれば、このステップは不要です。**"
+                "**すでに適度な長さの音声ファイルからなるデータがある場合は、その音声をData/{}/rawに入れれば、このステップは不要です。**"
             )
             with gr.Row():
                 with gr.Column():
                     input_dir = gr.Textbox(
-                        label="元音声の入っているフォルダパス",
+                        label="⭐２.音声の入っているフォルダパス⭐",
                         value="inputs",
                         info="下記フォルダにwavやmp3等のファイルを入れておいてください",
                     )
@@ -155,8 +202,9 @@ def create_dataset_app() -> gr.Blocks:
                         value=False,
                         label="WAVファイル名の末尾に元ファイルの時間範囲を付与する",
                     )
-                    slice_button = gr.Button("スライスを実行")
+                    slice_button = gr.Button("⭐３.スライスを実行⭐")
                 result1 = gr.Textbox(label="結果")
+
         with gr.Row():
             with gr.Column():
                 whisper_model = gr.Dropdown(
@@ -218,8 +266,9 @@ def create_dataset_app() -> gr.Blocks:
                     label="ビームサーチのビーム数",
                     info="小さいほど速度が上がる（以前は5）",
                 )
-            transcribe_button = gr.Button("音声の文字起こし")
+            transcribe_button = gr.Button("⭐4.音声の文字起こし⭐")
             result2 = gr.Textbox(label="結果")
+
         slice_button.click(
             do_slice,
             inputs=[
@@ -232,6 +281,7 @@ def create_dataset_app() -> gr.Blocks:
             ],
             outputs=[result1],
         )
+
         transcribe_button.click(
             do_transcribe,
             inputs=[
@@ -247,6 +297,7 @@ def create_dataset_app() -> gr.Blocks:
             ],
             outputs=[result2],
         )
+
         use_hf_whisper.change(
             lambda x: (
                 gr.update(visible=x),
@@ -258,8 +309,3 @@ def create_dataset_app() -> gr.Blocks:
         )
 
     return app
-
-
-if __name__ == "__main__":
-    app = create_dataset_app()
-    app.launch(inbrowser=True)
