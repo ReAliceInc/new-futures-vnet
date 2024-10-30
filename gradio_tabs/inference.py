@@ -100,7 +100,7 @@ examples = [
 # 初期設定と利用規約の説明を Markdown 形式で定義
 initial_md = """
 <span style='color: red; font-size: 20px;'>⭐️１.データセット作成 => ⭐️２. 学習 => ⭐️３. 上級者向け: スタイル作成 => ⭐️４. 上級者向け: マージ => ⭐️５. 音声合成</span>
-<p style='font-size: 20px; color: orange;'>上記に沿ってお進みください。タブを開きますと⭐️と数字に沿って進みください。</p>
+<p style='font-size: 20px; color: orange;'>上記に沿って⭐️と数字に進みください。</p>
 """
 
 # グラディオUIの定義
