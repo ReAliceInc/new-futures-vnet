@@ -97,22 +97,63 @@ examples = [
         "ZH",
     ],
 ]
-
+# 初期設定と利用規約の説明を Markdown 形式で定義
 initial_md = """
-- Ver 2.5で追加されたデフォルトの [`koharune-ami`（小春音アミ）モデル](https://huggingface.co/litagin/sbv2_koharune_ami) と[`amitaro`（あみたろ）モデル](https://huggingface.co/litagin/sbv2_amitaro) は、[あみたろの声素材工房](https://amitaro.net/)で公開されているコーパス音源・ライブ配信音声を利用して事前に許可を得て学習したモデルです。下記の**利用規約を必ず読んで**からご利用ください。
-
-- Ver 2.5のアップデート後に上記モデルをダウンロードするには、`Initialize.bat`をダブルクリックするか、手動でダウンロードして`model_assets`ディレクトリに配置してください。
-
-- Ver 2.3で追加された**エディター版**のほうが実際に読み上げさせるには使いやすいかもしれません。`Editor.bat`か`python server_editor.py --inbrowser`で起動できます。
+<span style='color: red; font-size: 20px;'>⭐️１.データセット作成 => ⭐️２. 学習 => ⭐️３. 上級者向け: スタイル作成 => ⭐️４. 上級者向け: マージ => ⭐️５. 音声合成</span>
+<p style='font-size: 20px; color: orange;'>上記に沿ってお進みください。タブを開きますと⭐️と数字に沿って進みください。</p>
 """
 
-terms_of_use_md = """
-#ここに説明文を追加
-"""
+# グラディオUIの定義
+with gr.Blocks(theme=GRADIO_THEME) as app:
+    gr.Markdown(initial_md)
+
+    # 使い方セクションを Accordion に追加
+    with gr.Accordion("使い方", open=False):
+        gr.Markdown
 
 how_to_md = """
+<p style='font-size: 20px;'>
+    画像で知りたい人はこちらから⇒⇒⇒
+    <a href="https://xd.adobe.com/view/c3b67c16-7ea2-430f-a40a-bf2276fd2f72-96e5/" target="_blank" style="font-size: 20px; color: orange; text-decoration: underline;">
+        こちらは画像でSBV2の使い方をわかりやすく説明しています。
+    </a>
+</p>
+
+Style-Bert-VITS2の学習用データセットを作成するためのツールです。以下の2つからなります。
+
+- 与えられた音声からちょうどいい長さの発話区間を切り取りスライス
+- 音声に対して文字起こし
+
+このうち両方を使ってもよいし、スライスする必要がない場合は後者のみを使ってもよいです。コーパス音源などすでに適度な長さの音声ファイルがある場合はスライスは不要です。
+
+### 1.データセット作成
+音声を一定の長さにスライスし、学習用のデータセットを準備します。「データセット作成」タブで音声データの準備。まずは「データセット作成」タブで音声データを準備します。
+
+### 2.学習
+「学習」タブで音声モデルを作成。データセットが準備できたら、次は「学習」タブで音声モデルを学習させます。
+
+### 3.スタイル作成
+「スタイル作成」タブで音声スタイルの調整。学習が完了したら、音声スタイルを作成して調整することができます。
+
+### 4.マージ
+複数のスタイルを組み合わせて、新しいスタイルを作成することができます。たとえば、「話し方はAさんで、声のトーンはBさん」という風に合成することも可能です。
+
+### 5.音声合成
+「音声合成」タブで実際に音声を生成。最後に、テキストから音声を生成して確認できます。
+
+### SBV2でできること
+- 自然な話し方の音声生成
+  テキストを入力すると、まるで人が話しているかのような音声を生成できます。
+
+- 異なる話し方や声での合成
+  スタイルを変えることで、同じ内容でも異なる話し方や声で生成できます。
+
+- 音声のカスタマイズ
+  スタイルベクトルやスタイルのマージを利用して、カスタマイズされた音声合成が可能です。
+
+
 下のように`model_assets`ディレクトリの中にモデルファイルたちを置いてください。
-```
+
 model_assets
 ├── your_model
 │   ├── config.json
@@ -122,7 +163,7 @@ model_assets
 │   └── style_vectors.npy
 └── another_model
     ├── ...
-```
+
 各モデルにはファイルたちが必要です：
 - `config.json`：学習時の設定ファイル
 - `*.safetensors`：学習済みモデルファイル（1つ以上が必要、複数可）
@@ -318,7 +359,6 @@ def create_inference_app(model_holder: TTSModelHolder) -> gr.Blocks:
 
     with gr.Blocks(theme=GRADIO_THEME) as app:
         gr.Markdown(initial_md)
-        gr.Markdown(terms_of_use_md)
         with gr.Accordion(label="使い方", open=False):
             gr.Markdown(how_to_md)
         with gr.Row():

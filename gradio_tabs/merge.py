@@ -1017,6 +1017,12 @@ def create_merge_app(model_holder: TTSModelHolder) -> gr.Blocks:
         str(f) for f in model_holder.model_files_dict[model_names[initial_id]]
     ]
 
+    gr.Markdown(
+    """
+    <p style='font-size: 20px; color: orange;'>⭐️と数字に沿って進みください。</p>
+    """
+    )
+
     with gr.Blocks(theme=GRADIO_THEME) as app:
         gr.Markdown(
             "複数のStyle-Bert-VITS2モデルから、声質・話し方・話す速さを取り替えたり混ぜたり引いたりして新しいモデルを作成できます。"

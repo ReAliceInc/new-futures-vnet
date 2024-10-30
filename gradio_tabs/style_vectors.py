@@ -411,6 +411,12 @@ https://ja.wikipedia.org/wiki/DBSCAN
 
 def create_style_vectors_app():
     with gr.Blocks(theme=GRADIO_THEME) as app:
+        gr.Markdown(
+    """
+    <p style='font-size: 20px; color: orange;'>⭐️と数字に沿って進みください。</p>
+    """
+    )
+
         with gr.Accordion("使い方", open=False):
             gr.Markdown(how_to_md)
         model_name = gr.Textbox(placeholder="your_model_name", label="⭐1.モデル名⭐")
