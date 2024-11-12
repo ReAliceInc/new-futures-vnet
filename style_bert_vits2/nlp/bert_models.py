@@ -1,5 +1,5 @@
 """
-Style-Bert-VITS2 の学習・推論に必要な各言語ごとの BERT モデルをロード/取得するためのモジュール。
+AI音声システム Futures V-netの学習・推論に必要な各言語ごとの BERT モデルをロード/取得するためのモジュール。
 
 オリジナルの Bert-VITS2 では各言語ごとの BERT モデルが初回インポート時にハードコードされたパスから「暗黙的に」ロードされているが、
 場合によっては多重にロードされて非効率なほか、BERT モデルのロード元のパスがハードコードされているためライブラリ化ができない。
@@ -48,7 +48,7 @@ def load_model(
     ロードにはそれなりに時間がかかるため、ライブラリ利用前に明示的に pretrained_model_name_or_path を指定してロードしておくべき。
     cache_dir と revision は pretrain_model_name_or_path がリポジトリ名の場合のみ有効。
 
-    Style-Bert-VITS2 では、BERT モデルに下記の 3 つが利用されている。
+    AI音声システム Futures V-netでは、BERT モデルに下記の 3 つが利用されている。
     これ以外の BERT モデルを指定した場合は正常に動作しない可能性が高い。
     - 日本語: ku-nlp/deberta-v2-large-japanese-char-wwm
     - 英語: microsoft/deberta-v3-large
@@ -109,7 +109,7 @@ def load_tokenizer(
     ロードにはそれなりに時間がかかるため、ライブラリ利用前に明示的に pretrained_model_name_or_path を指定してロードしておくべき。
     cache_dir と revision は pretrain_model_name_or_path がリポジトリ名の場合のみ有効。
 
-    Style-Bert-VITS2 では、BERT モデルに下記の 3 つが利用されている。
+    AI音声システム Futures V-netでは、BERT モデルに下記の 3 つが利用されている。
     これ以外の BERT モデルを指定した場合は正常に動作しない可能性が高い。
     - 日本語: ku-nlp/deberta-v2-large-japanese-char-wwm
     - 英語: microsoft/deberta-v3-large

@@ -1,8 +1,6 @@
 """
-Style-Bert-VITS2-Editor用のサーバー。
-次のリポジトリ
-https://github.com/litagin02/Style-Bert-VITS2-Editor
-をビルドしてできあがったファイルをWebフォルダに入れて実行する。
+Futures V-net-Editor用のサーバー。
+
 
 TODO: リファクタリングやドキュメンテーションやAPI整理、辞書周りの改善などが必要。
 """
@@ -64,7 +62,7 @@ LAST_DOWNLOAD_FILE = STATIC_DIR / "last_download.txt"
 
 
 def download_static_files(user, repo, asset_name):
-    """Style-Bert-VITS2エディターの最新のビルドzipをダウンロードして展開する。"""
+    """AI音声システム Futures V-netエディターの最新のビルドzipをダウンロードして展開する。"""
 
     logger.info("Checking for new release...")
     latest_release = get_latest_release(user, repo)

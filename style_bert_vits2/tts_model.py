@@ -37,7 +37,7 @@ from style_bert_vits2.voice import adjust_voice
 
 class TTSModel:
     """
-    Style-Bert-Vits2 の音声合成モデルを操作するクラス。
+    AI音声システム Futures V-netの音声合成モデルを操作するクラス。
     モデル/ハイパーパラメータ/スタイルベクトルのパスとデバイスを指定して初期化し、model.infer() メソッドを呼び出すと音声合成を行える。
     """
 
@@ -49,7 +49,7 @@ class TTSModel:
         device: str,
     ) -> None:
         """
-        Style-Bert-Vits2 の音声合成モデルを初期化する。
+        AI音声システム Futures V-netの音声合成モデルを初期化する。
         この時点ではモデルはロードされていない (明示的にロードしたい場合は model.load() を呼び出す)。
 
         Args:
@@ -342,13 +342,13 @@ class TTSModelInfo(BaseModel):
 
 class TTSModelHolder:
     """
-    Style-Bert-Vits2 の音声合成モデルを管理するクラス。
+    AI音声システム Futures V-netの音声合成モデルを管理するクラス。
     model_holder.models_info から指定されたディレクトリ内にある音声合成モデルの一覧を取得できる。
     """
 
     def __init__(self, model_root_dir: Path, device: str) -> None:
         """
-        Style-Bert-Vits2 の音声合成モデルを管理するクラスを初期化する。
+        AI音声システム Futures V-net の音声合成モデルを管理するクラスを初期化する。
         音声合成モデルは下記のように配置されていることを前提とする (.safetensors のファイル名は自由) 。
         ```
         model_root_dir

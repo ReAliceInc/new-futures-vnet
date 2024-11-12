@@ -43,7 +43,7 @@ path_config = get_path_config()
 model_holder = TTSModelHolder(Path(path_config.assets_root), device)
 
 with gr.Blocks(theme=gr.themes.Base()) as app:
-    gr.Markdown(f"# Style-Bert-VITS2 WebUI (version {VERSION})")
+    gr.Markdown(f"# AI音声システム Futures V-netWebUI (version {VERSION})")
     with gr.Tabs():
         with gr.Tab("音声合成"):
             create_inference_app(model_holder=model_holder)

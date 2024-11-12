@@ -341,7 +341,7 @@ def save_style_vectors_by_dirs(model_name: str, audio_dir_str: str):
 
 
 how_to_md = f"""
-Style-Bert-VITS2でこまかくスタイルを指定して音声合成するには、モデルごとにスタイルベクトルのファイル`style_vectors.npy`を作成する必要があります。
+AI音声システム Futures V-netでこまかくスタイルを指定して音声合成するには、モデルごとにスタイルベクトルのファイル`style_vectors.npy`を作成する必要があります。
 
 ただし、学習の過程では自動的に、平均スタイル「{DEFAULT_STYLE}」と、（**Ver 2.5.0以降からは**）音声をサブフォルダに分けていた場合はそのサブフォルダごとのスタイルが保存されています。
 
