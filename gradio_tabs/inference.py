@@ -6,6 +6,7 @@ import scipy.io.wavfile as wavfile
 from pydub import AudioSegment
 import io
 import gradio as gr
+import os
 
 from style_bert_vits2.constants import (
     DEFAULT_ASSIST_TEXT_WEIGHT,
@@ -133,7 +134,7 @@ Style-Bert-VITS2の学習用データセットを作成するためのツール�
 「学習」タブで音声モデルを作成。データセットが準備できたら、次は「学習」タブで音声モデルを学習させます。
 
 ### 3.スタイル作成
-「スタイル作成」タブで音声スタイルの調整。学習が完了したら、音声スタイルを作成して調整することができます。
+「スタイル作成」タブで音声スタイルの調整。学習が完��したら、音声スタイルを作成して調整することができます。
 
 ### 4.マージ
 複数のスタイルを組み合わせて、新しいスタイルを作成することができます。たとえば、「話し方はAさんで、声のトーンはBさん」という風に合成することも可能です。
@@ -206,24 +207,15 @@ def create_inference_app(model_holder: TTSModelHolder) -> gr.Blocks:
         s /= np.max(np.abs(s))
         return s
 
-    def add_watermark(audio, sr):
-        # ピンクノイズを生成
-        noise_length = len(audio)
-        pink_noise = generate_pink_noise(noise_length)
+    def add_watermark(audio, sr, noise_file_path):
+        # ノイズファイルを読み込む
+        noise_segment = AudioSegment.from_wav(noise_file_path)
 
         # AudioSegmentオブジェクトに変換
         audio_segment = AudioSegment(
             audio.tobytes(),
             frame_rate=sr,
             sample_width=audio.dtype.itemsize,
-            channels=1,
-        )
-
-        # ピンクノイズをAudioSegmentオブジェクトに変換
-        noise_segment = AudioSegment(
-            pink_noise.astype(np.float32).tobytes(),
-            frame_rate=sr,
-            sample_width=4,
             channels=1,
         )
 
@@ -318,8 +310,9 @@ def create_inference_app(model_holder: TTSModelHolder) -> gr.Blocks:
                 pitch_scale=pitch_scale,
                 intonation_scale=intonation_scale,
             )
+            noise_file_path = os.path.join("public", "watermark.wav")
             # 透かしを追加
-            audio_with_watermark = add_watermark(audio, sr)
+            audio_with_watermark = add_watermark(audio, sr, noise_file_path)
         except InvalidToneError as e:
             logger.error(f"Tone error: {e}")
             return f"Error: アクセント指定が不正です:\n{e}", None, kata_tone_json_str
